@@ -57,8 +57,8 @@ public class AuthenticationController {
         {
             User user = userDao.getByUserName(loginDto.getUsername());
 
-            if (user == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-
+            if (user == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User Name not Found");
+                                                                                        //added custom message
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
             return new ResponseEntity<>(new LoginResponseDto(jwt, user), httpHeaders, HttpStatus.OK);
@@ -68,6 +68,8 @@ public class AuthenticationController {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
     }
+
+
     @PreAuthorize("permitAll()")
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(value = "/register", method = RequestMethod.POST)
