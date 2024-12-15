@@ -25,8 +25,11 @@ import org.yearup.security.jwt.TokenProvider;
 
 @RestController
 @CrossOrigin
-@PreAuthorize("permitAll()")
+//@PreAuthorize("permitAll()")
+//removed "@PreAuthorize("permitAll()")" from class and applied it to specific methods
+
 public class AuthenticationController {
+
 
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
@@ -39,7 +42,7 @@ public class AuthenticationController {
         this.userDao = userDao;
         this.profileDao = profileDao;
     }
-
+    @PreAuthorize("permitAll()")
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginDto loginDto) {
 
@@ -65,7 +68,7 @@ public class AuthenticationController {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
     }
-
+    @PreAuthorize("permitAll()")
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<User> register(@Valid @RequestBody RegisterUserDto newUser) {
