@@ -41,16 +41,15 @@ public class CategoriesController
         return categoryId;
     }
 
-    @PostMapping
+    @PostMapping("/add")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Category addCategory(@RequestBody Category category)
     {
-
         categoryDao.create(category);
         return category;
     }
 
-    @PostMapping
+    @PostMapping("/update/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void updateCategory(@PathVariable int id, @RequestBody Category category)
     {
