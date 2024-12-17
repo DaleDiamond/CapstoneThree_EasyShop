@@ -25,8 +25,7 @@ import org.yearup.security.jwt.TokenProvider;
 
 @RestController
 @CrossOrigin
-//@PreAuthorize("permitAll()")
-//removed "@PreAuthorize("permitAll()")" from class and applied it to specific methods
+
 
 public class AuthenticationController {
 

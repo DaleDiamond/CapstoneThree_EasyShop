@@ -14,8 +14,7 @@ import org.yearup.models.User;
 
 import java.security.Principal;
 
-// convert this class to a REST controller
-// only logged in users should have access to these actions
+
 @RestController
 @PreAuthorize("isAuthenticated")
 @CrossOrigin
@@ -27,15 +26,15 @@ public class ShoppingCartController
     private ProductDao productDao;
 
     @Autowired
-    public ShoppingCart getCart(Principal principal) {
+    public ShoppingCart getCart(ShoppingCartDao shoppingCartDao, UserDao userDao, ProductDao productDao) {
         this.shoppingCartDao = shoppingCartDao;
         this.userDao = userDao;
         this.productDao = productDao;
+
+        return null;
     }
 
-
     @GetMapping("")
-    @PreAuthorize("isAuthenticated")
     public ShoppingCart getCart(Principal principal)
     {
         try
@@ -44,7 +43,6 @@ public class ShoppingCartController
             User user = userDao.getByUserName(userName);
             int userId = user.getId();
 
-//             use the shoppingcartDao to get all items in the cart and return the cart
             return shoppingCartDao.getByUserId();
         }
         catch(Exception e)
@@ -53,15 +51,15 @@ public class ShoppingCartController
         }
     }
     @PutMapping("products/{productsID}")
-    public void updateCart (@PathVariable int prodcutId, @RequestBody ShoppingCartItem item, Principal principal)
+    public void updateCart (@PathVariable int productId, @RequestBody ShoppingCartItem item, Principal principal)
     {
         try
         {
             String userName = principal.getName();
-            User user = UserDao.getByUserName(userName);
+            User user = userDao.getByUserName(userName);
             int userId = user.getId();
 
-            shoppingCartDao.updateCart(userId, prodcutId, item.getQuantity());
+            shoppingCartDao.updateCart(userId, productId, item.getQuantity());
         }
         catch (Exception e)
         {
@@ -74,7 +72,7 @@ public class ShoppingCartController
         try
         {
             String userName = principal.getName();
-            User user = userDao.getByUserName();
+            User user = userDao.getByUserName(userName);
             int userId = user.getId();
 
             shoppingCartDao.clearCart(userId);
@@ -85,16 +83,3 @@ public class ShoppingCartController
     }
 }
 
-    // add a POST method to add a product to the cart - the url should be
-    // https://localhost:8080/cart/products/15 (15 is the productId to be added
-
-
-    // add a PUT method to update an existing product in the cart - the url should be
-    // https://localhost:8080/cart/products/15 (15 is the productId to be updated)
-    // the BODY should be a ShoppingCartItem - quantity is the only value that will be updated
-
-
-    // add a DELETE method to clear all products from the current users cart
-    // https://localhost:8080/cart
-
-}

@@ -3,6 +3,7 @@ package org.yearup.data.mysql;
 import org.springframework.stereotype.Component;
 import org.yearup.data.CategoryDao;
 import org.yearup.models.Category;
+import org.yearup.models.User;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
@@ -15,6 +16,11 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
     public MySqlCategoryDao(DataSource dataSource)
     {
         super(dataSource);
+    }
+
+    @Override
+    public User getByUserName(String username) {
+        return null;
     }
 
     @Override

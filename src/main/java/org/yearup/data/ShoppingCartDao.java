@@ -11,5 +11,9 @@ public interface ShoppingCartDao
     void clearCart(int userId);
 
 
+
+
+
+
     // add additional method signatures here
 }
