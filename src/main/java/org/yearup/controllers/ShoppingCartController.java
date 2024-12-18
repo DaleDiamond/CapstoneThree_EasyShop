@@ -17,8 +17,6 @@ import java.security.Principal;
 
 
 @RestController
-@PreAuthorize("isAuthenticated()")
-@CrossOrigin
 @RequestMapping("/cart")
 
 public class ShoppingCartController {
@@ -34,21 +32,13 @@ public class ShoppingCartController {
     }
 
     @GetMapping("{id}")
-    @PreAuthorize("isAuthenticated()")
     public ShoppingCart getCart(Principal principal) {
         try {
             String userName = principal.getName();
             User user = userDao.getByUserName(userName);
-            if (user == null) {
-                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
-            }
-
             int userId = user.getId();
-            ShoppingCart cart = shoppingCartDao.getByUserId(userId);
-            if (cart == null) {
-                cart = new ShoppingCart();
-            }
-            return cart;
+
+            return shoppingCartDao.getByUserId(userId);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "OH NO... please try again.");
         }
