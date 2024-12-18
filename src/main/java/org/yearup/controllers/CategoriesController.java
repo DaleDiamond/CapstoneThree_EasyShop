@@ -1,16 +1,19 @@
 package org.yearup.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.yearup.data.CategoryDao;
 import org.yearup.data.ProductDao;
 import org.yearup.models.Category;
+import org.yearup.models.Product;
 
 import java.util.List;
 
 @RestController
-@RequestMapping
+@RequestMapping("/categories")
 @CrossOrigin
 
 public class CategoriesController
@@ -24,7 +27,7 @@ public class CategoriesController
         this.productDao = productDao;
     }
     @GetMapping
-    public List<Category> getAllCategories(){
+    public List<Category> getAll(){
         return categoryDao.getAllCategories();
     }
 
@@ -34,30 +37,33 @@ public class CategoriesController
         return categoryDao.getById(id);
     }
 
-    @GetMapping("{categoryId}/products")
-    public int getProductsById(@PathVariable int categoryId)
-    {
-        // get a list of product by categoryId
-        return categoryId;
-    }
 
     @PostMapping("/add")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @ResponseStatus(value = HttpStatus.CREATED)
+
     public Category addCategory(@RequestBody Category category)
     {
         categoryDao.create(category);
         return category;
     }
 
-    @PostMapping("/update/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public void updateCategory(@PathVariable int id, @RequestBody Category category)
+    @PutMapping("/{categoryId}/products")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public Product addProductToCategory(@PathVariable int CategoryId, @RequestBody Product product)
     {
-        categoryDao.update(id, category);
+        return productDao.add(product);
     }
 
+    @PutMapping("/{id}")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<String> updateCategory(@PathVariable int id, @RequestBody Category category) {
+        categoryDao.update(id, category);
+        return ResponseEntity.ok("Category update complete");
+    }
+
+
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteCategory(@PathVariable int id)
     {
         categoryDao.delete(id);
