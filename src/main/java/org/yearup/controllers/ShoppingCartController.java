@@ -3,6 +3,7 @@ package org.yearup.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.yearup.data.ProductDao;
@@ -16,41 +17,57 @@ import java.security.Principal;
 
 
 @RestController
-@PreAuthorize("isAuthenticated")
+@PreAuthorize("isAuthenticated()")
 @CrossOrigin
-@RequestMapping("cart")
-public class ShoppingCartController
-{
+@RequestMapping("/cart")
+
+public class ShoppingCartController {
     private ShoppingCartDao shoppingCartDao;
     private UserDao userDao;
     private ProductDao productDao;
 
     @Autowired
-    public ShoppingCart getCart(ShoppingCartDao shoppingCartDao, UserDao userDao, ProductDao productDao) {
+    public ShoppingCartController(ShoppingCartDao shoppingCartDao, UserDao userDao, ProductDao productDao) {
         this.shoppingCartDao = shoppingCartDao;
         this.userDao = userDao;
         this.productDao = productDao;
-
-        return null;
     }
 
-    @GetMapping("")
-    public ShoppingCart getCart(Principal principal)
-    {
-        try
-        {
+    @GetMapping("{id}")
+    @PreAuthorize("isAuthenticated()")
+    public ShoppingCart getCart(Principal principal) {
+        try {
             String userName = principal.getName();
             User user = userDao.getByUserName(userName);
-            int userId = user.getId();
+            if (user == null) {
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
+            }
 
-            return shoppingCartDao.getByUserId();
-        }
-        catch(Exception e)
-        {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
+            int userId = user.getId();
+            ShoppingCart cart = shoppingCartDao.getByUserId(userId);
+            if (cart == null) {
+                cart = new ShoppingCart();
+            }
+            return cart;
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "OH NO... please try again.");
         }
     }
-    @PutMapping("products/{productsID}")
+
+    @PostMapping("/products/{productID}")
+    public void addProductToCart(@PathVariable int productId, Authentication authentication) {
+        try {
+            String userName = authentication.getName();
+            User user = userDao.getByUserName(userName);
+            int userId = user.getId();
+            shoppingCartDao.addProductToCart(userId, productId);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops.. our bad", e);
+        }
+    }
+
+
+    @PutMapping("products/{productID}")
     public void updateCart (@PathVariable int productId, @RequestBody ShoppingCartItem item, Principal principal)
     {
         try
@@ -60,13 +77,12 @@ public class ShoppingCartController
             int userId = user.getId();
 
             shoppingCartDao.updateCart(userId, productId, item.getQuantity());
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oh NO... please try again", e);
         }
     }
-    @DeleteMapping("")
+
+    @DeleteMapping
     public void clearCart(Principal principal)
     {
         try
@@ -76,8 +92,7 @@ public class ShoppingCartController
             int userId = user.getId();
 
             shoppingCartDao.clearCart(userId);
-        }
-        catch(Exception e) {
+        } catch(Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "OH NO.. please try again", e);
         }
     }
