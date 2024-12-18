@@ -24,7 +24,7 @@ public class ShoppingCartController {
     private UserDao userDao;
     private ProductDao productDao;
 
-    @Autowired
+
     public ShoppingCartController(ShoppingCartDao shoppingCartDao, UserDao userDao, ProductDao productDao) {
         this.shoppingCartDao = shoppingCartDao;
         this.userDao = userDao;
@@ -58,7 +58,7 @@ public class ShoppingCartController {
 
 
     @PutMapping("products/{productID}")
-    public void updateCart (@PathVariable int productId, @RequestBody ShoppingCartItem item, Principal principal)
+    public void updateProductInCart (@PathVariable int productId, @RequestBody ShoppingCartItem item, Principal principal)
     {
         try
         {
@@ -66,7 +66,7 @@ public class ShoppingCartController {
             User user = userDao.getByUserName(userName);
             int userId = user.getId();
 
-            shoppingCartDao.updateCart(userId, productId, item.getQuantity());
+            shoppingCartDao.updateProductInCart(userId, productId, item.getQuantity());
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oh NO... please try again", e);
         }

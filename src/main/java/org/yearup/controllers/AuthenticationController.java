@@ -25,7 +25,7 @@ import org.yearup.security.jwt.TokenProvider;
 
 @RestController
 @CrossOrigin
-
+@PreAuthorize("permitAll()")
 
 public class AuthenticationController {
 
@@ -41,7 +41,7 @@ public class AuthenticationController {
         this.userDao = userDao;
         this.profileDao = profileDao;
     }
-    @PreAuthorize("permitAll()")
+
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginDto loginDto) {
 
@@ -68,8 +68,6 @@ public class AuthenticationController {
         }
     }
 
-
-    @PreAuthorize("permitAll()")
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<User> register(@Valid @RequestBody RegisterUserDto newUser) {

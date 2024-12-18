@@ -23,10 +23,6 @@ public class MyShoppingCartDao implements ShoppingCartDao {
         return null;
     }
 
-    @Override
-    public void updateCart(int userId, int prodcutId, int quantity) {
-
-    }
 
     @Override
     public void clearCart(int userId) {
@@ -35,6 +31,11 @@ public class MyShoppingCartDao implements ShoppingCartDao {
 
     @Override
     public void addProductToCart(int userId, int productId) {
+
+    }
+
+    @Override
+    public void updateProductInCart(int userId, int productId, int quantity) {
 
     }
 }
