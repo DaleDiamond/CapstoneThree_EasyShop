@@ -26,9 +26,7 @@ import org.yearup.security.jwt.TokenProvider;
 @RestController
 @CrossOrigin
 @PreAuthorize("permitAll()")
-
 public class AuthenticationController {
-
 
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
@@ -57,43 +55,48 @@ public class AuthenticationController {
             User user = userDao.getByUserName(loginDto.getUsername());
 
             if (user == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User Name not Found");
-                                                                                        //added custom message
+
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
             return new ResponseEntity<>(new LoginResponseDto(jwt, user), httpHeaders, HttpStatus.OK);
         }
-        catch(Exception ex)
-        {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
+        catch(Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.", ex);
         }
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<User> register(@Valid @RequestBody RegisterUserDto newUser) {
-
         try
-        {
+        {System.out.println("Registering new user: " + newUser.getUsername());
             boolean exists = userDao.exists(newUser.getUsername());
-            if (exists)
-            {
+            if (exists) {
+                System.out.println("User already Exist: " + newUser.getUsername());
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User Already Exists.");
             }
 
-
             User user = userDao.create(new User(0, newUser.getUsername(), newUser.getPassword(), newUser.getRole()));
-            System.out.println("New User Created: " +user.getUsername());
+            user = userDao.create(user);
+            System.out.println("New User Created: " + user.getUsername());
 
-
-            Profile profile = new Profile();
-            profile.setUserId(user.getId());
-            profileDao.create(profile);
-
+            if (user != null) {
+                Profile profile = new Profile();
+                profile.setUserId(user.getId());
+                profileDao.create(profile);
+                System.out.println("Profile created for user: " + user.getUsername());
+            }else{
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User creation failed");
+            }
+            System.out.println("User registration successful for: " + user.getUsername());
             return new ResponseEntity<>(user, HttpStatus.CREATED);
         }
-        catch (Exception e){
+        catch (ResponseStatusException e) {
+            throw e;
+        }catch(Exception e){
             e.printStackTrace();
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
+            System.out.println("Exception during registration: " + e.getMessage());
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.", e);
         }
     }
 }

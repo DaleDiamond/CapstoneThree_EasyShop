@@ -39,24 +39,22 @@ public class CategoriesController
     }
 
 
-    @PostMapping("/add")
+    @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-
-    public Category addCategory(@RequestBody Category category)
-    {
+    public Category addCategory(@RequestBody Category category) {
         categoryDao.create(category);
         return category;
     }
 
     @PutMapping("/{categoryId}/products")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public Product addProductToCategory(@PathVariable int CategoryId, @RequestBody Product product)
+    public Product addProductToCategory(@PathVariable int categoryId, @RequestBody Product product)
     {
         return productDao.add(product);
     }
 
     @PutMapping("/{id}")
-    @ResponseStatus(value = HttpStatus.CREATED)
+    @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<String> updateCategory(@PathVariable int id, @RequestBody Category category) {
         categoryDao.update(id, category);
         return ResponseEntity.ok("Category update complete");

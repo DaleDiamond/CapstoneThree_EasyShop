@@ -24,8 +24,8 @@ public class ProductsController
         this.productDao = productDao;
     }
 
-    @GetMapping("")
-//    @PreAuthorize("permitAll()")
+    @GetMapping("{id}")
+    @PreAuthorize("permitAll()")
     public List<Product> search(@RequestParam(name="cat", required = false) Integer categoryId,
                                 @RequestParam(name="minPrice", required = false) BigDecimal minPrice,
                                 @RequestParam(name="maxPrice", required = false) BigDecimal maxPrice,
@@ -43,7 +43,7 @@ public class ProductsController
     }
 
     @GetMapping("{id}")
-//    @PreAuthorize("permitAll()")
+    @PreAuthorize("permitAll()")
     public Product getById(@PathVariable int id )
     {
         try
@@ -62,11 +62,9 @@ public class ProductsController
     }
 
     @PostMapping()
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public Product addProduct(@RequestBody Product product)
-    {
-        try
-        {
+    @PreAuthorize("permitAll")
+    public Product addProduct(@RequestBody Product product) {
+        try {
             return productDao.create(product);
         }
         catch(Exception ex)
@@ -76,21 +74,20 @@ public class ProductsController
     }
 
     @PutMapping("{id}")
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public void updateProduct(@PathVariable int id, @RequestBody Product product)
-    {
-        try
-        {
-            productDao.create(product);
+    @PreAuthorize("permitAll")
+    public void updateProduct(@PathVariable int id, @RequestBody Product product) {
+        try {
+            product.setProductId(id);
+            productDao.update(id, product);
         }
         catch(Exception ex)
         {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.", ex);
         }
     }
 
     @DeleteMapping("{id}")
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("permitAll")
     public void deleteProduct(@PathVariable int id)
     {
         try
