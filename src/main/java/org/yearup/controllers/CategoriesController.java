@@ -50,7 +50,7 @@ public class CategoriesController
     @ResponseStatus(value = HttpStatus.CREATED)
     public Product addProductToCategory(@PathVariable int categoryId, @RequestBody Product product)
     {
-        return productDao.add(product);
+        return productDao.create(product);
     }
 
     @PutMapping("/{id}")
