@@ -40,7 +40,7 @@ public class ShoppingCartController {
 
             return shoppingCartDao.getByUserId(userId);
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "OH NO... please try again.");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Oops.. our bad");
         }
     }
 
@@ -50,7 +50,7 @@ public class ShoppingCartController {
             String userName = authentication.getName();
             User user = userDao.getByUserName(userName);
             int userId = user.getId();
-            shoppingCartDao.addProductToCart(userId, productId);
+            shoppingCartDao.addProductToCart(userId, productId, 1);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops.. our bad", e);
         }
@@ -68,7 +68,7 @@ public class ShoppingCartController {
 
             shoppingCartDao.updateProductInCart(userId, productId, item.getQuantity());
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oh NO... please try again", e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops.. our bad", e);
         }
     }
 
@@ -83,7 +83,7 @@ public class ShoppingCartController {
 
             shoppingCartDao.clearCart(userId);
         } catch(Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "OH NO.. please try again", e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops.. our bad", e);
         }
     }
 }

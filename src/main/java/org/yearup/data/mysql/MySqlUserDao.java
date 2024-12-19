@@ -19,8 +19,6 @@ public class MySqlUserDao extends MySqlDaoBase implements UserDao
     {
         super(dataSource);
     }
-
-
     @Override
     public User create(User newUser)
     {
@@ -33,14 +31,12 @@ public class MySqlUserDao extends MySqlDaoBase implements UserDao
             ps.setString(1, newUser.getUsername());
             ps.setString(2, hashedPassword);
             ps.setString(3, newUser.getRole());
-
             ps.executeUpdate();
 
             User user = getByUserName(newUser.getUsername());
             user.setPassword("");
 
             return user;
-
         }
         catch (SQLException e)
         {
