@@ -77,7 +77,6 @@ public class AuthenticationController {
             }
 
             User user = userDao.create(new User(0, newUser.getUsername(), newUser.getPassword(), newUser.getRole()));
-            user = userDao.create(user);
             System.out.println("New User Created: " + user.getUsername());
 
             if (user != null) {

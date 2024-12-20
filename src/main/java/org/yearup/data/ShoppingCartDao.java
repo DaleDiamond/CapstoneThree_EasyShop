@@ -1,7 +1,6 @@
 package org.yearup.data;
 
 import org.yearup.models.ShoppingCart;
-import org.yearup.models.ShoppingCartItem;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -15,10 +14,11 @@ public interface ShoppingCartDao
 
     void clearCart(int userId);
 
-    void updateProductInCart(int userId, int productId, int quantity);
+    boolean updateProductInCart(int userId, int productId, int quantity);
 
     Connection getConnection() throws SQLException;
 
+    boolean addProduct(int userId, int productId, int i);
 
 
     // add additional method signatures here

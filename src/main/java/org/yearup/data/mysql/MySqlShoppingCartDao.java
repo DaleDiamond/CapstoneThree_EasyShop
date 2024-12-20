@@ -75,16 +75,15 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
             statement.setInt(3, quantity);
             statement.setInt(4, quantity);
             statement.executeUpdate();
+            return getByUserId(userId);
 
         } catch (SQLException e) {
             throw new RuntimeException("Error adding product to cart for user ID: " + userId, e);
         }
-
-        return getByUserId(userId);
     }
 
     @Override
-    public void updateProductInCart(int userId, int productId, int quantity) {
+    public boolean updateProductInCart(int userId, int productId, int quantity) {
         String query = "UPDATE shopping_cart SET quantity = ? WHERE user_id = ? AND product_id = ?";
 
         try (Connection connection = this.getConnection();
@@ -94,10 +93,17 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
             statement.setInt(2, userId);
             statement.setInt(3, productId);
             statement.executeUpdate();
+            int rowsAffected = statement.executeUpdate();
+            return rowsAffected > 0;
 
         } catch (SQLException e) {
             throw new RuntimeException("Error updating product in cart for user ID: " + userId + ", product ID: " + productId, e);
         }
+    }
+
+    @Override
+    public boolean addProduct(int userId, int productId, int i) {
+        return false;
     }
 
 
