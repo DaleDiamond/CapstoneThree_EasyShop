@@ -1,5 +1,5 @@
 
-![img_2.png](img_2.png)
+![img_3.png](img_3.png)
 Welcome to EasyShop, the ultimate shopping assistant! This project makes your shopping experience seamless and stress-free. Let's dive in! 🛒✨
 
 ## **🎯 Features**
