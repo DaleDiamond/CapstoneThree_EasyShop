@@ -16,7 +16,7 @@ Welcome to EasyShop, the ultimate shopping assistant! This project makes your sh
 * Browse or search for products.
 * Add items to your cart or wishlist.
 * Enjoy a seamless shopping experience!
-
+  ![img_1.png](img_1.png)
 ## **🖥️ Tech Usage**
 
 * Java programming language
@@ -29,4 +29,3 @@ Welcome to EasyShop, the ultimate shopping assistant! This project makes your sh
 * Identifying the bugs using error messages and failed tests.
 * Debugging the code using different resources and learned skills to correct the errors.
 * Fixing the code by implementing new codes and annotations to get a running code.
-![img_1.png](img_1.png)
