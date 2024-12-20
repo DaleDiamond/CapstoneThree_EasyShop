@@ -1,5 +1,5 @@
-# 🌟 **EasyShop - Your Shopping Companion** 🌟
 
+![img_2.png](img_2.png)
 Welcome to EasyShop, the ultimate shopping assistant! This project makes your shopping experience seamless and stress-free. Let's dive in! 🛒✨
 
 ## **🎯 Features**
@@ -29,4 +29,4 @@ Welcome to EasyShop, the ultimate shopping assistant! This project makes your sh
 * Identifying the bugs using error messages and failed tests.
 * Debugging the code using different resources and learned skills to correct the errors.
 * Fixing the code by implementing new codes and annotations to get a running code.
-![img.png](img.png)
+![img_1.png](img_1.png)
